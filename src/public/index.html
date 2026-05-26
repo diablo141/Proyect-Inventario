@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Gestión de Inventario para Tienda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">S</div>
+        <div>
+          <h1>Sistema Tienda</h1>
+          <p>Dashboard ERP</p>
+        </div>
+      </div>
+      <nav class="menu">
+        <button class="menu-link active" data-section="dashboard"><i class='bx bx-home'></i> Dashboard</button>
+        <button class="menu-link" data-section="productos"><i class='bx bx-layer'></i> Productos</button>
+        <button class="menu-link" data-section="ventas"><i class='bx bx-cart'></i> Ventas</button>
+        <button class="menu-link" data-section="categorias"><i class='bx bx-tag'></i> Categorías</button>
+        <button class="menu-link" data-section="proveedores"><i class='bx bx-buildings'></i> Proveedores</button>
+        <button class="menu-link" data-section="notificaciones"><i class='bx bx-bell'></i> Alertas</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="profile-card">
+          <div class="profile-avatar">A</div>
+          <div>
+            <strong>Admin Tienda</strong>
+            <span>Administrador</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="button-secondary">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="search-group">
+          <i class='bx bx-search'></i>
+          <input id="searchInput" type="search" placeholder="Buscar productos..." />
+        </div>
+        <div class="topbar-actions">
+          <div class="status-chip" id="statusChip">Activo</div>
+          <div class="user-chip"><i class='bx bx-user-circle'></i> <span id="userName">Administrador</span></div>
+        </div>
+      </header>
+
+      <section class="page-section" id="dashboardSection">
+        <div class="section-header">
+          <div>
+            <span class="overline">Panel Administrativo</span>
+            <h2>Resumen de la tienda</h2>
+          </div>
+          <div class="section-actions">
+            <button id="reloadDashboard" class="button-primary">Actualizar</button>
+          </div>
+        </div>
+
+        <div class="grid cards-grid dashboard-cards">
+          <article class="card stat-card">
+            <span>Total productos</span>
+            <h3 id="totalProductos">0</h3>
+          </article>
+          <article class="card stat-card">
+            <span>Total categorías</span>
+            <h3 id="totalCategorias">0</h3>
+          </article>
+          <article class="card stat-card">
+            <span>Ventas del día</span>
+            <h3 id="ventasDia">$0.00</h3>
+          </article>
+          <article class="card stat-card">
+            <span>Ganancia mensual</span>
+            <h3 id="gananciaMes">$0.00</h3>
+          </article>
+          <article class="card stat-card">
+            <span>Productos agotándose</span>
+            <h3 id="lowStockCount">0</h3>
+          </article>
+          <article class="card stat-card">
+            <span>Proveedor recomendado</span>
+            <h3 id="recommendedProvider">-</h3>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="card chart-card">
+            <div class="card-header">
+              <h3>Ventas temporales</h3>
+            </div>
+            <canvas id="salesChart"></canvas>
+          </article>
+
+          <article class="card mini-panel">
+            <div class="mini-card">
+              <span>Stock bajo</span>
+              <strong id="lowStockCount">0</strong>
+            </div>
+            <div class="mini-card">
+              <span>Producto más vendido</span>
+              <strong id="bestProduct">-</strong>
+            </div>
+            <div class="mini-card">
+              <span>Ventas por categoría</span>
+              <strong id="categorySales">-</strong>
+            </div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="card chart-card">
+            <div class="card-header">
+              <h3>Ventas por categoría</h3>
+            </div>
+            <canvas id="categoryChart"></canvas>
+          </article>
+
+          <article class="card chart-card">
+            <div class="card-header">
+              <h3>Productos más / menos vendidos</h3>
+            </div>
+            <canvas id="productChart"></canvas>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="card table-card">
+            <div class="card-header">
+              <h3>Productos recientes</h3>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Producto</th><th>Categoría</th><th>Stock</th><th>Precio</th></tr>
+                </thead>
+                <tbody id="recentProductsTable"></tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section hidden" id="productosSection">
+        <div class="section-header">
+          <div>
+            <span class="overline">Gestión de inventario</span>
+            <h2>Productos</h2>
+          </div>
+          <button id="showProductForm" class="button-primary">Nuevo producto</button>
+        </div>
+
+        <article class="card filter-panel">
+          <select id="categoryFilter">
+            <option value="">Todas las categorías</option>
+          </select>
+          <button id="clearFilter" class="button-secondary">Limpiar filtro</button>
+        </article>
+
+        <article class="card table-card">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Proveedor</th>
+                  <th>Stock</th>
+                  <th>Precio</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="productsTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="page-section hidden" id="ventasSection">
+        <div class="section-header">
+          <div>
+            <span class="overline">Registro de ventas</span>
+            <h2>Ventas</h2>
+          </div>
+        </div>
+
+        <article class="card sales-panel">
+          <div class="sales-form">
+            <label>Producto</label>
+            <select id="saleProductSelect"></select>
+            <label>Cantidad</label>
+            <input type="number" id="saleQuantity" min="1" value="1" />
+            <button id="addSaleItem" class="button-primary">Agregar</button>
+          </div>
+
+          <div class="sale-cart">
+            <h3>Carrito de venta</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th><th>Quitar</th></tr>
+                </thead>
+                <tbody id="saleItemsTable"></tbody>
+              </table>
+            </div>
+            <div class="sale-summary">
+              <span>Total:</span>
+              <strong id="saleTotal">$0.00</strong>
+            </div>
+            <button id="submitSale" class="button-primary">Registrar venta</button>
+          </div>
+        </article>
+
+        <article class="card table-card">
+          <div class="card-header"><h3>Historial de ventas</h3></div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Items</th><th>Total</th><th>Fecha</th></tr>
+              </thead>
+              <tbody id="salesHistoryTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="page-section hidden" id="categoriasSection">
+        <div class="section-header">
+          <div>
+            <span class="overline">Administrar categorías</span>
+            <h2>Categorías</h2>
+          </div>
+          <button id="showCategoryForm" class="button-primary">Nueva categoría</button>
+        </div>
+
+        <article class="card table-card">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>Nombre</th><th>Descripción</th></tr>
+              </thead>
+              <tbody id="categoriesTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="page-section hidden" id="proveedoresSection">
+        <div class="section-header">
+          <div>
+            <span class="overline">Gestión de proveedores</span>
+            <h2>Proveedores</h2>
+          </div>
+          <button id="showProviderForm" class="button-primary">Nuevo proveedor</button>
+        </div>
+
+        <article class="card filter-panel">
+          <input id="providerSearchInput" type="text" placeholder="Buscar proveedores..." />
+        </article>
+
+        <article class="card table-card">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>Proveedor</th><th>Correo</th><th>Teléfono</th><th>Dirección</th><th>Acciones</th></tr>
+              </thead>
+              <tbody id="providersTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="page-section hidden" id="notificacionesSection">
+        <div class="section-header">
+          <div>
+            <span class="overline">Alertas automáticas</span>
+            <h2>Notificaciones</h2>
+          </div>
+        </div>
+
+        <article class="card notifications-card">
+          <ul id="notificationsList"></ul>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
