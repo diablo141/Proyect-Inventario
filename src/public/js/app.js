@@ -75,7 +75,7 @@ const authHeaders = () => {
 
 const logout = () => {
   localStorage.removeItem('token');
-  window.location.href = '/login.html';
+  window.location.href = 'login.html';
 };
 
 const fetchJson = async (url, options = {}) => {
@@ -151,7 +151,13 @@ const fetchNotifications = async () => {
 
 const fetchReports = async () => {
   state.reports.ventas = await fetchJson(`${API_BASE}/reportes/ventas`);
-  state.reports.productos = await fetchJson(`${API_BASE}/reportes/productos`);
+  const productosReport = await fetchJson(`${API_BASE}/reportes/productos`);
+  state.reports.productos = {
+    ...productosReport,
+    masVendidos: productosReport.masVendidos || [],
+    menosVendidos: productosReport.productosMenosVendidos || [],
+    categoriaVentas: productosReport.categoriaVentas || []
+  };
   state.reports.ganancias = await fetchJson(`${API_BASE}/reportes/ganancias`);
 };
 
@@ -309,8 +315,8 @@ const renderCategoryChart = () => {
 
 const renderProductChart = () => {
   const labels = state.reports.productos.masVendidos?.map((item) => item.nombre) || [];
-  const sold = state.reports.productos.masVendidos?.map((item) => Number(item.vendidas)) || [];
-  const lowSold = state.reports.productos.menosVendidos?.map((item) => Number(item.vendidas)) || [];
+  const sold = state.reports.productos.masVendidos?.map((item) => Number(item.cantidad_vendida || item.vendidas || 0)) || [];
+  const lowSold = state.reports.productos.menosVendidos?.map((item) => Number(item.cantidad_vendida || item.vendidas || 0)) || [];
   if (productChart) {
     productChart.data.labels = labels;
     productChart.data.datasets[0].data = sold;

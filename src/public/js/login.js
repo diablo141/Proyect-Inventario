@@ -2,6 +2,7 @@ const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const loginMessage = document.getElementById('loginMessage');
+const API_BASE_URL = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
 
 const showMessage = (message, type = 'error') => {
   loginMessage.textContent = message;
@@ -16,7 +17,7 @@ const setToken = (token) => {
 const getToken = () => localStorage.getItem('token');
 
 const redirectToDashboard = () => {
-  window.location.href = '/';
+  window.location.href = 'index.html';
 };
 
 const onLoad = async () => {
@@ -24,7 +25,7 @@ const onLoad = async () => {
   if (!token) return;
 
   try {
-    const response = await fetch('/api/auth/profile', {
+    const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (response.ok) redirectToDashboard();
@@ -43,10 +44,10 @@ loginForm.addEventListener('submit', async (event) => {
   }
 
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ correo: email, password })
+      body: JSON.stringify({ email, password })
     });
     const data = await response.json();
 

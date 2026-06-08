@@ -1,8 +1,10 @@
-const db = require('../config/db');
+const pool = require('../config/db');
 
 const getNotificaciones = async (req, res) => {
   try {
-    const [notificaciones] = await db.query('SELECT id, mensaje, tipo, creado_en FROM notificaciones ORDER BY creado_en DESC LIMIT 10');
+    const [notificaciones] = await pool.query(
+      'SELECT id_notificacion AS id, mensaje, tipo, leido, creado_en FROM notificaciones ORDER BY creado_en DESC LIMIT 20'
+    );
     res.json(notificaciones);
   } catch (error) {
     console.error('Error al obtener notificaciones:', error);
@@ -10,6 +12,4 @@ const getNotificaciones = async (req, res) => {
   }
 };
 
-module.exports = {
-  getNotificaciones
-};
+module.exports = { getNotificaciones };

@@ -1,7 +1,7 @@
 {
   "name": "gestion-tienda",
   "version": "1.0.0",
-  "description": "Sistema de gestión de inventario para tienda con dashboard administrativo",
+  "description": "Sistema de gestion de inventario para tienda - Backend Node.js + Express",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

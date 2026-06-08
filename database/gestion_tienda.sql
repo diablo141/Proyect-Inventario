@@ -1,34 +1,42 @@
--- Base de datos completa para Sistema de Gesti√≥n de Inventario para Tienda
-CREATE DATABASE IF NOT EXISTS gestion_tienda;
+-- Script SQL completo para Sistema de GestiÛn de Inventario para Tienda
+CREATE DATABASE IF NOT EXISTS gestion_tienda CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE gestion_tienda;
 
+DROP TABLE IF EXISTS detalle_ventas;
+DROP TABLE IF EXISTS ventas;
+DROP TABLE IF EXISTS productos;
+DROP TABLE IF EXISTS proveedores;
+DROP TABLE IF EXISTS categorias;
+DROP TABLE IF EXISTS notificaciones;
+DROP TABLE IF EXISTS usuarios;
+
 CREATE TABLE IF NOT EXISTS usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_usuario INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
-  email VARCHAR(150) NOT NULL UNIQUE,
-  password VARCHAR(150) NOT NULL,
-  rol VARCHAR(50) DEFAULT 'administrador',
+  correo VARCHAR(150) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  rol VARCHAR(50) NOT NULL DEFAULT 'administrador',
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS categorias (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL UNIQUE,
+  id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(120) NOT NULL UNIQUE,
   descripcion VARCHAR(255),
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS proveedores (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(150) NOT NULL,
-  contacto VARCHAR(150) NOT NULL,
-  email VARCHAR(150),
-  telefono VARCHAR(50),
+  telefono VARCHAR(50) NOT NULL,
+  correo VARCHAR(150) NOT NULL,
+  direccion VARCHAR(255),
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS productos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_producto INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(150) NOT NULL,
   categoria_id INT NOT NULL,
   proveedor_id INT NOT NULL,
@@ -36,64 +44,64 @@ CREATE TABLE IF NOT EXISTS productos (
   stock INT NOT NULL DEFAULT 0,
   descripcion TEXT,
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  FOREIGN KEY (proveedor_id) REFERENCES proveedores(id) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB;
+  CONSTRAINT fk_producto_categoria FOREIGN KEY (categoria_id) REFERENCES categorias(id_categoria) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_producto_proveedor FOREIGN KEY (proveedor_id) REFERENCES proveedores(id_proveedor) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS ventas (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_venta INT AUTO_INCREMENT PRIMARY KEY,
   total DECIMAL(12,2) NOT NULL,
-  gana DECIMAL(12,2) NOT NULL DEFAULT 0,
+  ganancia DECIMAL(12,2) NOT NULL DEFAULT 0,
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS detalle_ventas (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_detalle INT AUTO_INCREMENT PRIMARY KEY,
   venta_id INT NOT NULL,
   producto_id INT NOT NULL,
   cantidad INT NOT NULL,
   precio_unitario DECIMAL(10,2) NOT NULL,
   total DECIMAL(12,2) NOT NULL,
-  FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB;
+  CONSTRAINT fk_detalle_venta FOREIGN KEY (venta_id) REFERENCES ventas(id_venta) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_detalle_producto FOREIGN KEY (producto_id) REFERENCES productos(id_producto) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS notificaciones (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_notificacion INT AUTO_INCREMENT PRIMARY KEY,
   mensaje VARCHAR(255) NOT NULL,
-  tipo ENUM('info', 'warning', 'alert') DEFAULT 'info',
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  leido BOOLEAN DEFAULT FALSE
-) ENGINE=InnoDB;
+  tipo ENUM('info','warning','alert') NOT NULL DEFAULT 'info',
+  leido TINYINT(1) NOT NULL DEFAULT 0,
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO usuarios (nombre, email, password) VALUES
-('Administrador Principal', 'admin@tienda.com', 'admin123');
+INSERT INTO usuarios (nombre, correo, password, rol) VALUES
+('Administrador Principal', 'admin@tienda.com', '$2b$10$OdzFYGwWKio.DP8Brm/JDOP6lVgUQdNtdpl9fGlT7SNlf87eCNv56', 'administrador');
 
 INSERT INTO categorias (nombre, descripcion) VALUES
-('Calzado', 'Productos de calzado y accesorios'),
-('Electr√≥nica', 'Dispositivos electr√≥nicos y gadgets'),
-('Papeler√≠a', 'Material de oficina y papeler√≠a'),
-('Hogar', 'Productos para el hogar y decoraci√≥n');
+('Calzado', 'Calzado deportivo y urbano'),
+('ElectrÛnica', 'Accesorios y dispositivos electrÛnicos'),
+('PapelerÌa', 'Material de oficina y escolar'),
+('Hogar', 'Productos para el hogar y decoraciÛn');
 
-INSERT INTO proveedores (nombre, contacto, email, telefono) VALUES
-('Proveedor Azul', 'Mar√≠a L√≥pez', 'contacto@proveedorazul.com', '555-1234'),
-('Proveedor Digital', 'Carlos G√≥mez', 'ventas@proveedordigital.com', '555-5678'),
-('Proveedor Office', 'Luisa P√©rez', 'oficina@proveedoffice.com', '555-9012');
+INSERT INTO proveedores (nombre, telefono, correo, direccion) VALUES
+('Proveedor Azul', '555-1234', 'contacto@proveedorazul.com', 'Av. Central 123'),
+('Proveedor Digital', '555-5678', 'ventas@proveedordigital.com', 'Calle Tech 45'),
+('Proveedor Office', '555-9012', 'oficina@proveedoffice.com', 'Boulevard Oficina 78');
 
 INSERT INTO productos (nombre, categoria_id, proveedor_id, precio, stock, descripcion) VALUES
-('Zapatillas deportivas', 1, 1, 59.99, 24, 'Zapatillas c√≥modas para uso diario'),
-('Aud√≠fonos Bluetooth', 2, 2, 79.50, 14, 'Aud√≠fonos inal√°mbricos con sonido premium'),
+('Zapatillas deportivas', 1, 1, 59.99, 24, 'Zapatillas cÛmodas para uso diario'),
+('AudÌfonos Bluetooth', 2, 2, 79.50, 14, 'AudÌfonos inal·mbricos con sonido premium'),
 ('Cuaderno profesional', 3, 3, 8.20, 38, 'Cuaderno tapa dura para notas'),
-('Cafetera el√©ctrica', 4, 2, 120.00, 9, 'Cafetera de goteo para hogar'),
-('Bol√≠grafo gel', 3, 3, 1.50, 48, 'Bol√≠grafo suave y resistente'),
-('L√°mpara LED', 4, 1, 35.00, 6, 'L√°mpara de escritorio con luz regulable'),
+('Cafetera elÈctrica', 4, 2, 120.00, 9, 'Cafetera de goteo para hogar'),
+('BolÌgrafo gel', 3, 3, 1.50, 48, 'BolÌgrafo suave y resistente'),
+('L·mpara LED', 4, 1, 35.00, 6, 'L·mpara de escritorio con luz regulable'),
 ('Smartwatch', 2, 2, 149.99, 20, 'Reloj inteligente con monitoreo de salud'),
-('Sandalias casuales', 1, 1, 29.95, 11, 'Sandalias de verano con dise√±o moderno');
+('Sandalias casuales', 1, 1, 29.95, 11, 'Sandalias de verano con diseÒo moderno');
 
-INSERT INTO ventas (total, gana, creado_en) VALUES
-(119.98, 0, DATE_SUB(NOW(), INTERVAL 1 DAY)),
-(47.70, 0, DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(299.98, 0, NOW());
+INSERT INTO ventas (total, ganancia, creado_en) VALUES
+(119.98, 119.98, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(47.70, 47.70, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(299.98, 299.98, NOW());
 
 INSERT INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario, total) VALUES
 (1, 1, 2, 59.99, 119.98),
@@ -102,5 +110,5 @@ INSERT INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario, to
 (3, 7, 2, 149.99, 299.98);
 
 INSERT INTO notificaciones (mensaje, tipo) VALUES
-('Producto "L√°mpara LED" tiene stock bajo. Revisa el proveedor recomendado.', 'alert'),
-('Producto "Cafetera el√©ctrica" est√° pr√≥ximo a agotarse.', 'warning');
+('Producto "L·mpara LED" tiene stock bajo. Revisa el proveedor para reposiciÛn.', 'alert'),
+('Producto "Cafetera elÈctrica" est· prÛximo a agotarse.', 'warning');
