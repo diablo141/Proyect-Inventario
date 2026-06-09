@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-
 /**
  * Módulo para verificar y crear usuarios administrativos
  * Se ejecuta automáticamente al iniciar el servidor
