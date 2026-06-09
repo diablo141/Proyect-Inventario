@@ -1,7 +1,7 @@
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ override: true });
 
 console.log('📊 CREDENCIALES DE CONEXIÓN:');
 console.log(`  Host: ${process.env.DB_HOST}`);

@@ -112,7 +112,7 @@ mysql -u root -p
 
 2. Una vez dentro, cambia .env a la contraseña correcta:
 ```env
-DB_PASSWORD=TU_CONTRASEÑA_REAL
+DB_PASSWORD=Pablo.141
 ```
 
 3. Vuelve a ejecutar:

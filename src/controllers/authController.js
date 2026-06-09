@@ -1,9 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
-
-const jwtSecret = process.env.JWT_SECRET || 'secret_key';
-const jwtExpiry = '8h';
+const { jwtSecret, jwtExpiry } = require('../config/jwt');
 
 const register = async (req, res) => {
   try {

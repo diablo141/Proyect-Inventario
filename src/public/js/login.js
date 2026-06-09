@@ -2,7 +2,9 @@ const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const loginMessage = document.getElementById('loginMessage');
-const API_BASE_URL = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
+const API_BASE_URL = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:3000'
+  : '';
 
 const showMessage = (message, type = 'error') => {
   loginMessage.textContent = message;

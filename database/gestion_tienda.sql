@@ -1,14 +1,6 @@
--- Script SQL completo para Sistema de Gestión de Inventario para Tienda
+-- Script SQL completo para Sistema de Gestiï¿½n de Inventario para Tienda
 CREATE DATABASE IF NOT EXISTS gestion_tienda CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE gestion_tienda;
-
-DROP TABLE IF EXISTS detalle_ventas;
-DROP TABLE IF EXISTS ventas;
-DROP TABLE IF EXISTS productos;
-DROP TABLE IF EXISTS proveedores;
-DROP TABLE IF EXISTS categorias;
-DROP TABLE IF EXISTS notificaciones;
-DROP TABLE IF EXISTS usuarios;
 
 CREATE TABLE IF NOT EXISTS usuarios (
   id_usuario INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,41 +66,41 @@ CREATE TABLE IF NOT EXISTS notificaciones (
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO usuarios (nombre, correo, password, rol) VALUES
-('Administrador Principal', 'admin@tienda.com', '$2b$10$OdzFYGwWKio.DP8Brm/JDOP6lVgUQdNtdpl9fGlT7SNlf87eCNv56', 'administrador');
+INSERT IGNORE INTO usuarios (nombre, correo, password, rol) VALUES
+('Administrador Principal', 'admin@tienda.com', '$2b$10$8hyTbVLth9PtN1r.QLqemuc6Mf715goVV7BcbiTxlkTXlCkXP4eoG', 'administrador');
 
-INSERT INTO categorias (nombre, descripcion) VALUES
+INSERT IGNORE INTO categorias (nombre, descripcion) VALUES
 ('Calzado', 'Calzado deportivo y urbano'),
-('Electrónica', 'Accesorios y dispositivos electrónicos'),
-('Papelería', 'Material de oficina y escolar'),
-('Hogar', 'Productos para el hogar y decoración');
+('Electrï¿½nica', 'Accesorios y dispositivos electrï¿½nicos'),
+('Papelerï¿½a', 'Material de oficina y escolar'),
+('Hogar', 'Productos para el hogar y decoraciï¿½n');
 
-INSERT INTO proveedores (nombre, telefono, correo, direccion) VALUES
+INSERT IGNORE INTO proveedores (nombre, telefono, correo, direccion) VALUES
 ('Proveedor Azul', '555-1234', 'contacto@proveedorazul.com', 'Av. Central 123'),
 ('Proveedor Digital', '555-5678', 'ventas@proveedordigital.com', 'Calle Tech 45'),
 ('Proveedor Office', '555-9012', 'oficina@proveedoffice.com', 'Boulevard Oficina 78');
 
-INSERT INTO productos (nombre, categoria_id, proveedor_id, precio, stock, descripcion) VALUES
-('Zapatillas deportivas', 1, 1, 59.99, 24, 'Zapatillas cómodas para uso diario'),
-('Audífonos Bluetooth', 2, 2, 79.50, 14, 'Audífonos inalámbricos con sonido premium'),
+INSERT IGNORE INTO productos (nombre, categoria_id, proveedor_id, precio, stock, descripcion) VALUES
+('Zapatillas deportivas', 1, 1, 59.99, 24, 'Zapatillas cï¿½modas para uso diario'),
+('Audï¿½fonos Bluetooth', 2, 2, 79.50, 14, 'Audï¿½fonos inalï¿½mbricos con sonido premium'),
 ('Cuaderno profesional', 3, 3, 8.20, 38, 'Cuaderno tapa dura para notas'),
-('Cafetera eléctrica', 4, 2, 120.00, 9, 'Cafetera de goteo para hogar'),
-('Bolígrafo gel', 3, 3, 1.50, 48, 'Bolígrafo suave y resistente'),
-('Lámpara LED', 4, 1, 35.00, 6, 'Lámpara de escritorio con luz regulable'),
+('Cafetera elï¿½ctrica', 4, 2, 120.00, 9, 'Cafetera de goteo para hogar'),
+('Bolï¿½grafo gel', 3, 3, 1.50, 48, 'Bolï¿½grafo suave y resistente'),
+('Lï¿½mpara LED', 4, 1, 35.00, 6, 'Lï¿½mpara de escritorio con luz regulable'),
 ('Smartwatch', 2, 2, 149.99, 20, 'Reloj inteligente con monitoreo de salud'),
-('Sandalias casuales', 1, 1, 29.95, 11, 'Sandalias de verano con diseño moderno');
+('Sandalias casuales', 1, 1, 29.95, 11, 'Sandalias de verano con diseï¿½o moderno');
 
-INSERT INTO ventas (total, ganancia, creado_en) VALUES
+INSERT IGNORE INTO ventas (total, ganancia, creado_en) VALUES
 (119.98, 119.98, DATE_SUB(NOW(), INTERVAL 1 DAY)),
 (47.70, 47.70, DATE_SUB(NOW(), INTERVAL 2 DAY)),
 (299.98, 299.98, NOW());
 
-INSERT INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario, total) VALUES
+INSERT IGNORE INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unitario, total) VALUES
 (1, 1, 2, 59.99, 119.98),
 (2, 3, 3, 8.20, 24.60),
 (2, 5, 3, 1.50, 4.50),
 (3, 7, 2, 149.99, 299.98);
 
-INSERT INTO notificaciones (mensaje, tipo) VALUES
-('Producto "Lámpara LED" tiene stock bajo. Revisa el proveedor para reposición.', 'alert'),
-('Producto "Cafetera eléctrica" está próximo a agotarse.', 'warning');
+INSERT IGNORE INTO notificaciones (mensaje, tipo) VALUES
+('Producto "Lï¿½mpara LED" tiene stock bajo. Revisa el proveedor para reposiciï¿½n.', 'alert'),
+('Producto "Cafetera elï¿½ctrica" estï¿½ prï¿½ximo a agotarse.', 'warning');

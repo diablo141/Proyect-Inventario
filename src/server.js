@@ -1,10 +1,11 @@
 const dotenv = require('dotenv');
 
 // Cargar .env primero, ANTES de cualquier otra cosa
-dotenv.config();
+dotenv.config({ override: true });
 
 const app = require('./app');
 const pool = require('./config/db');
+const { verifyAdminUsers } = require('./config/adminUsers');
 
 const PORT = process.env.PORT || 3000;
 
@@ -13,6 +14,9 @@ const startServer = async () => {
   try {
     // ✅ Verificar conexión MySQL ANTES de escuchar
     await pool.verifyConnection();
+    
+    // ✅ Verificar y crear usuarios administrativos
+    await verifyAdminUsers(pool);
     
     // Solo entonces iniciar Express
     app.listen(PORT, () => {

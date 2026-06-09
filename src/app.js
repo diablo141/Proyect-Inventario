@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 
 const authRoutes = require('./routes/authRoutes');
+const testRoutes = require('./routes/testRoutes');
 const productosRoutes = require('./routes/productosRoutes');
 const categoriasRoutes = require('./routes/categoriasRoutes');
 const proveedoresRoutes = require('./routes/proveedoresRoutes');
@@ -17,7 +18,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Rutas públicas (sin autenticación)
 app.use('/api/auth', authRoutes);
+app.use('/api/test', testRoutes);
+
+// Middleware de autenticación para rutas protegidas
 app.use(authMiddleware);
 
 app.use('/api/productos', productosRoutes);
