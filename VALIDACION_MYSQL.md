@@ -44,11 +44,11 @@ Abre `.env` y asegúrate de que tiene exactamente:
 
 ```env
 PORT=3000
-DB_HOST=localhost
+DB_HOST=acela.proxy.rlwy.net
 DB_USER=root
-DB_PASSWORD=Pablo.141
-DB_NAME=gestion_tienda
-DB_PORT=3306
+DB_PASSWORD=sTJipQKINLyztzSAgWgkScBPBlOmidoR
+DB_NAME=mysql_railway
+DB_PORT=32431
 ```
 
 ⚠️ **VALIDACIÓN:**

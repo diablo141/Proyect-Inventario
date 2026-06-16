@@ -104,3 +104,5 @@ INSERT IGNORE INTO detalle_ventas (venta_id, producto_id, cantidad, precio_unita
 INSERT IGNORE INTO notificaciones (mensaje, tipo) VALUES
 ('Producto "L�mpara LED" tiene stock bajo. Revisa el proveedor para reposici�n.', 'alert'),
 ('Producto "Cafetera el�ctrica" est� pr�ximo a agotarse.', 'warning');
+
+select *from usuarios;

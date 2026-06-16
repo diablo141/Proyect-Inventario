@@ -11,11 +11,11 @@ console.log(`  Database: ${process.env.DB_NAME}`);
 console.log(`  Password: ${process.env.DB_PASSWORD ? '✓ Definida' : '✗ No definida'}\n`);
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306,
+  host: process.env.DB_HOST || 'acela.proxy.rlwy.net',
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 32431,
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'gestion_tienda',
+  password: process.env.DB_PASSWORD || 'sTJipQKINLyztzSAgWgkScBPBlOmidoR',
+  database: process.env.DB_NAME || 'mysql_railway',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
